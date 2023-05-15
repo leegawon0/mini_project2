@@ -16,5 +16,8 @@
         <input type="password" name="pw" id="pw">
         <button type="submit">로그인</button>
     </form>
+    <br>
+    <button id="signin" onclick="redirectSignin();">회원가입</button>
+    <script src="/application/view/js/common.js"></script>
 </body>
 </html>

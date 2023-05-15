@@ -37,6 +37,7 @@
 	1. 최초 실행 php파일
 		index.php
 			- 어떤 URL로 접속해도 index.php로 접속
+			- 키 url에 localhost/ 이후의 주소값 GET방식으로 담음 ex) localhost/user/login이면 url에 user/login 담김
 			- 설정파일 include후 application\libs\Application 호출
 	2. URL 분석 php파일
 		application\libs\Application

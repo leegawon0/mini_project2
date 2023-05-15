@@ -16,7 +16,7 @@ class UrlUtil {
     }
 
     // "/"를 "\"로 치환해주는 메소드
-    public static function replaceSlashToBackslash($str) {
+    public static function replaceSToBS($str) {
         return str_replace("/", "\\", $str);
     }
 }

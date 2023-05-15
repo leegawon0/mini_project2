@@ -7,10 +7,21 @@ class Application {
 
     // 생성자
     public function __construct() {
+
         // 접속 URL을 배열로 획득
         $arrPath = UrlUtil::getUrlArrPath();
-        $identityName = empty($arrPath[0]) ? "User" : ucfirst($arrPath[0]);
-        $action = (empty($arrPath[1]) ? "login" : $arrPath[1]).ucfirst(strtolower($_SERVER["REQUEST_METHOD"]));
+
+        if(!isset($_SESSION)) {
+            session_start();
+        }
+
+        if(empty($_SESSION)) {
+            $identityName = empty($arrPath[0]) ? "User" : ucfirst($arrPath[0]);
+            $action = (empty($arrPath[1]) ? "login" : $arrPath[1]).ucfirst(strtolower($_SERVER["REQUEST_METHOD"]));
+        } else {
+            $identityName = empty($arrPath[0]) ? "User" : ucfirst($arrPath[0]);
+            $action = (empty($arrPath[1]) ? "friend" : $arrPath[1]).ucfirst(strtolower($_SERVER["REQUEST_METHOD"]));
+        }
 
         // controller명 작성
         $controllerPath = _PATH_CONTROLLER.$identityName._BASE_FILENAME_CONTROLLER._EXTENSION_PHP;
@@ -22,7 +33,7 @@ class Application {
         }
 
         // 해당 Controller 호출
-        $controllerName = UrlUtil::replaceSlashToBackslash(_PATH_CONTROLLER.$identityName._BASE_FILENAME_CONTROLLER);
+        $controllerName = UrlUtil::replaceSToBS(_PATH_CONTROLLER.$identityName._BASE_FILENAME_CONTROLLER);
         new $controllerName($identityName, $action);
     }
 }

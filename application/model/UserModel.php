@@ -3,19 +3,29 @@
 namespace application\model;
 
 class UserModel extends Model {
-    public function getUser($arrUserInfo) {
+    public function getUser($arrUserInfo, $pwFlg = true, $dFlg = true ) {
         $sql = 
             " SELECT * "
             ." FROM user_info "
             ." WHERE " 
             ." u_id = :id "
-            ." AND u_pw = :pw "
-            ." AND d_flg = '0' "
             ;
+
+        if($pwFlg) {
+            $sql .= " AND u_pw = BINARY(:pw) ";
+        }
+        if($dFlg) {
+            $sql .= " AND d_flg = '0' ";
+        }
+
         $prepare = [
             ":id" => $arrUserInfo["id"]
-            ,":pw" => $arrUserInfo["pw"]
         ];
+
+        if($pwFlg) {
+            $prepare[":pw"] = $arrUserInfo["pw"];
+        }
+
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->execute($prepare);
@@ -23,35 +33,8 @@ class UserModel extends Model {
         } catch (Exception $e) {
             echo "UserModel->getUser Error : ".$e->getMessage();
             exit();
-        } finally {
-            $this->closeConn();
         }
         return $result;
-    }
-
-    public function idDupChk($arrUserInfo) {
-        $sql = 
-            " SELECT count(*) cnt "
-            ." FROM "
-            ." user_info "
-            ." WHERE "
-            ." u_id = :id "
-            ;
-        
-        $prepare = [
-            ":id" => $arrUserInfo["id"]
-        ];
-        try {
-            $stmt = $this->conn->prepare($sql);
-            $stmt->execute($prepare);
-            $result = $stmt->fetchAll();
-        } catch (Exception $e) {
-            echo "UserModel->getUser Error : ".$e->getMessage();
-            exit();
-        } finally {
-            $this->closeConn();
-        }
-        return $result[0]['cnt'];
     }
 
     public function insertUser($arrUserInfo) {
@@ -60,32 +43,27 @@ class UserModel extends Model {
             ." user_info( "
             ." u_id "
             ." ,u_pw "
+            ." ,u_name "
             ." ) "
             ." VALUES( "
             ." :id "
             ." ,:pw "
+            ." ,:name "
             ." ) "
             ;
         
         $prepare = [
-            ":id" => $arrUserInfo["chkId"]
+            ":id" => $arrUserInfo["id"]
             ,":pw" => $arrUserInfo["pw"]
+            ,":name" => $arrUserInfo["name"]
         ];
         try {
-            $this->conn->beginTransaction();
             $stmt = $this->conn->prepare($sql);
-            $stmt->execute( $prepare );
-            $result_cnt = $stmt->rowCount();
-            $this->conn->commit();
+            $result = $stmt->execute( $prepare );
+            return $result;
         } catch (Exception $e) {
-            $this->conn->rollback();
-            echo "UserModel->insertUser Error : ".$e->getMessage();
-            exit();
+            return false;
         }
-        finally {
-            $this->closeConn();
-        }
-        return $result_cnt;
     }
 
     public function deleteUser($arrUserInfo) {
@@ -112,9 +90,6 @@ class UserModel extends Model {
             $this->conn->rollback();
             echo "UserModel->deleteUser Error : ".$e->getMessage();
             exit();
-        }
-        finally {
-            $this->closeConn();
         }
         return $result_cnt;
     }

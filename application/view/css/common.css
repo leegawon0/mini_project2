@@ -1,0 +1,9 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.errMsg {
+    font-size: 0.8rem;
+    color: red;
+}

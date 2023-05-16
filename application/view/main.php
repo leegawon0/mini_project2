@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Friend List</title>
+    <title>Main</title>
+    <link rel="stylesheet" href="/application/view/css/common.css">
 </head>
 <body>
     <h3>로그인 정보 : <?php echo $_SESSION[_STR_LOGIN_ID] ?></h3>

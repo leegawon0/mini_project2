@@ -9,6 +9,7 @@ class UserController extends Controller {
 
     public function loginPost() {
         $result = $this->model->getUser($_POST);
+        $this->model->close(); // DB 파기
         // 유저 유무 체크
         if(count($result) === 0) {
             $errMsg = "입력하신 회원 정보가 없습니다.";
@@ -19,7 +20,7 @@ class UserController extends Controller {
         // session에 User ID 저장
         $_SESSION[_STR_LOGIN_ID] = $_POST["id"];
         // 리스트 페이지 리턴
-        return _BASE_REDIRECT."/user/friend";
+        return _BASE_REDIRECT."/user/main";
     }
 
     // 로그아웃 메소드
@@ -30,40 +31,78 @@ class UserController extends Controller {
         return _BASE_REDIRECT."/user/login";
     }
 
+    // 회원가입
     public function signinGet() {
         return "signin"._EXTENSION_PHP;
     }
 
     public function signinPost() {
-        var_dump($_POST);
-        if(isset($_POST['chkFlg'])) {
-            $result = $this->model->idDupChk($_POST);
-            if($result !== 0) {
-                $errMsg = "이미 존재하는 id입니다.";
-                $this->addDynamicProperty("errMsg", $errMsg);
-                return "signin"._EXTENSION_PHP;
-            }
-            $errMsg = "사용할 수 있는 id입니다.";
-            $this->addDynamicProperty("errMsg", $errMsg);
-            return "signin"._EXTENSION_PHP;
-        } else {
-            var_dump($_POST);
-            $result = $this->model->insertUser($_POST);
-            if($result !== 1) {
-                $errMsg = "회원가입에 실패했습니다.";
-                $this->addDynamicProperty("errMsg", $errMsg);
-                // 회원가입 페이지 리턴
-                return "signin"._EXTENSION_PHP;
-            }
-            return _BASE_REDIRECT."/user/login";
+
+        $arrPost = $_POST;
+        $arrChkErr = [];
+        // 유효성체크
+
+        // ID 영문숫자 체크
+        $chk1 = preg_match('/^[0-9a-z]*$/u', $arrPost["id"]);
+        if($chk1 !== 1) {
+            $arrChkErr["id"] = "* ID는 영문 소문자, 숫자 조합으로 입력해 주세요.";
         }
+
+        // ID 글자수 체크
+        if(mb_strlen($arrPost["id"]) === 0 || mb_strlen($arrPost["id"]) > 12) {
+            $arrChkErr["id"] = "* ID는 12글자 이하로 입력해 주세요.";
+        }
+
+        // PW 글자수 체크
+        if(mb_strlen($arrPost["pw"]) > 20 || mb_strlen($arrPost["pw"]) < 8) {
+            $arrChkErr["pw"] = "* 비밀번호는 8~20글자로 입력해 주세요.";
+        }
+        // PW 영문숫자특문 체크 (추가하기)
+        $chk2 = preg_match('/^[0-9a-zA-Z\!\@\#\$\%\^\&\*]*$/u', $arrPost["pw"]);
+        if($chk2 !== 1) {
+            $arrChkErr["pw"] = "* 비밀번호는 영문, 숫자, 특수문자 조합으로 입력해 주세요.";
+        }
+
+        // 비밀번호와 비밀번호 확인
+        if($arrPost["pw"] !== $arrPost["pwChk"]) {
+            $arrChkErr["pwChk"] = "* 비밀번호 확인이 일치하지 않습니다.";
+        }
+
+        // name 글자수 체크
+        if(mb_strlen($arrPost["name"]) > 30 || mb_strlen($arrPost["name"]) < 2) {
+            $arrChkErr["name"] = "* 이름은 2~30글자로 입력해 주세요.";
+        }
+
+        // 유효성체크 에러가 발생할 경우
+        if(!empty($arrChkErr)) {
+            // 에러메세지 셋팅
+            $this->addDynamicProperty('arrError', $arrChkErr);
+            return "signin"._EXTENSION_PHP;
+        }
+
+        // *** Transaction Start
+        $this->model->beginTransaction();
+
+        // user insert
+        if(!$this->model->insertUser($arrPost)) {
+            // 예외처리 롤백
+            $this->model->rollback();
+            echo "User Regist Error";
+            exit();
+        }
+        $this->model->commit(); // 정상처리 커밋
+        // *** Transaction End
+
+        // 로그인페이지로 이동
+        return _BASE_REDIRECT."/user/login";
+
     }
 
-    public function friendGet() {
+    public function mainGet() {
         if(empty($_SESSION)) {
             return "login"._EXTENSION_PHP;
         } else {
-            return "friend"._EXTENSION_PHP;
+            return "main"._EXTENSION_PHP;
         }
     }
 

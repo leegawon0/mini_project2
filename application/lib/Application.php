@@ -20,7 +20,7 @@ class Application {
             $action = (empty($arrPath[1]) ? "login" : $arrPath[1]).ucfirst(strtolower($_SERVER["REQUEST_METHOD"]));
         } else {
             $identityName = empty($arrPath[0]) ? "User" : ucfirst($arrPath[0]);
-            $action = (empty($arrPath[1]) ? "friend" : $arrPath[1]).ucfirst(strtolower($_SERVER["REQUEST_METHOD"]));
+            $action = (empty($arrPath[1]) ? "main" : $arrPath[1]).ucfirst(strtolower($_SERVER["REQUEST_METHOD"]));
         }
 
         // controller명 작성

@@ -9,7 +9,7 @@
 </head>
 <body>
     <h3>로그인 정보 : <?php echo $_SESSION[_STR_LOGIN_ID] ?></h3>
-    <h1>친구 목록 입니다.</h1>
+    <h1>메인 페이지 입니다.</h1>
     <button id="logout" onclick="redirectLogout();">로그아웃</button>
     <button id="setting" onclick="redirectSetting();">설정</button>
     <script src="/application/view/js/common.js"></script>

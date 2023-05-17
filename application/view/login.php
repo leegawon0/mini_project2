@@ -8,17 +8,23 @@
     <link rel="stylesheet" href="/application/view/css/common.css">
 </head>
 <body>
-    <h1>Login</h1>
-    <h3 style="color: red;"><?php echo isset($this->errMsg) ? $this->errMsg : ""; ?></h3>
-    <form action="/user/login" method="post">
-        <label for="id">ID</label>
-        <input type="text" name="id" id="id">
-        <label for="pw">PW</label>
-        <input type="password" name="pw" id="pw">
-        <button type="submit">로그인</button>
-    </form>
-    <br>
-    <button id="signin" onclick="redirectSignin();">회원가입</button>
+    <div class="loginContainer">
+        <div class="loginHeader">
+            <h1>Login</h1>
+        </div>
+        <div class="loginWrap">
+            <h3 style="color: red;"><?php echo isset($this->errMsg) ? $this->errMsg : ""; ?></h3>
+            <form action="/user/login" method="post">
+                <input type="text" name="id" id="id" >
+                <input type="password" name="pw" id="pw">
+                <button type="submit">로그인</button>
+            </form>
+        </div>
+        <div class="signinWrap">
+            <button id="signin" onclick="redirectSignin();">회원가입</button>
+        </div>
+    </div>
+
     <script src="/application/view/js/common.js"></script>
 </body>
 </html>

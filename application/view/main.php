@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/application/view/css/common.css">
 </head>
 <body>
+    <?php ?>
     <h3>로그인 정보 : <?php echo $_SESSION[_STR_LOGIN_ID] ?></h3>
     <h1>메인 페이지 입니다.</h1>
     <button id="logout" onclick="redirectLogout();">로그아웃</button>

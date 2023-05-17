@@ -8,12 +8,13 @@
     <link rel="stylesheet" href="/application/view/css/common.css">
 </head>
 <body>
+    <?php echo isset($this->successFlg) ? "<script>window.location.href = '/user/main';</script>" : "" ?>
     <h1>회원정보 수정</h1>
     <form id="editForm" action="/user/setting" method="post" onsubmit="return false">
         <span id="errMsgId" class="errMsg"></span>
         <br>
         <label for="id">아이디</label>
-        <input type="text" name="id" id="id" value="<?php echo !empty($this->arrUserInfo) ? $this->arrUserInfo["u_id"] : "" ?>" readonly>
+        <input type="text" name="id" id="id" value="<?php echo empty($_POST) ? $this->arrUserInfo["u_id"] : $_POST["id"] ?>" readonly>
         <br><br>
         <label for="pw">비밀번호</label>
         <input type="password" name="pw" id="pw">
@@ -24,13 +25,13 @@
         <span class="errMsg"><?php echo isset($this->arrError["pwChk"]) ? $this->arrError["pwChk"] : "" ?></span>
         <br><br>
         <label for="name">이름</label>
-        <input type="text" name="name" id="name" value="<?php echo !empty($this->arrUserInfo) ? $this->arrUserInfo["u_name"] : "" ?>">
+        <input type="text" name="name" id="name" value="<?php echo empty($_POST) ? $this->arrUserInfo["u_name"] : $_POST["name"] ?>">
         <span class="errMsg"><?php echo isset($this->arrError["name"]) ? $this->arrError["name"] : "" ?></span>
         <br><br>
         <button type="button" onclick="document.getElementById('editForm').submit();">정보 수정</button>
     </form>
     <h3 style="color: red;"><?php echo isset($this->errMsg) ? $this->errMsg : ""; ?></h3>
-    <button id="signout" onclick="alert('정말 탈퇴하시겠습니까?'); redirectSignout();">회원 탈퇴</button>
+    <button id="signout" onclick="signoutConfirm();">회원 탈퇴</button>
     <script src="/application/view/js/common.js"></script>
 </body>
 </html>

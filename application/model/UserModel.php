@@ -12,7 +12,7 @@ class UserModel extends Model {
             ;
 
         if($pwFlg) {
-            $sql .= " AND u_pw = BINARY(:pw) ";
+            $sql .= " AND u_pw = BINARY :pw ";
         }
         if($dFlg) {
             $sql .= " AND d_flg = '0' ";
@@ -94,8 +94,10 @@ class UserModel extends Model {
         return $result_cnt;
     }
 
-    public function updateUser($arrUserInfo) {
-        $sql = 
+    public function updateUser($arrUserInfo, $pwFlg = true) {
+        
+        if($pwFlg) {
+            $sql = 
             " UPDATE "
             ." user_info "
             ." SET "
@@ -104,12 +106,29 @@ class UserModel extends Model {
             ." WHERE "
             ." u_id = :id "
             ;
-        
-        $prepare = [
-            ":pw" => $arrUserInfo['pw']
-            ,":name" => $arrUserInfo['name']
-            ,":id" => $arrUserInfo['id']
-        ];
+        } else {
+            $sql = 
+            " UPDATE "
+            ." user_info "
+            ." SET "
+            ." u_name = :name "
+            ." WHERE "
+            ." u_id = :id "
+            ;
+        }
+
+        if($pwFlg) {
+            $prepare = [
+                ":pw" => $arrUserInfo['pw']
+                ,":name" => $arrUserInfo['name']
+                ,":id" => $arrUserInfo['id']
+            ];
+        } else {
+            $prepare = [
+                ":name" => $arrUserInfo['name']
+                ,":id" => $arrUserInfo['id']
+            ];
+        }
 
         try {
             $stmt = $this->conn->prepare($sql);

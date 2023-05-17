@@ -99,22 +99,14 @@ class UserController extends Controller {
     }
 
     public function mainGet() {
-        if(empty($_SESSION)) {
-            return "login"._EXTENSION_PHP;
-        } else {
-            return "main"._EXTENSION_PHP;
-        }
+        return "main"._EXTENSION_PHP;
     }
 
     public function settingGet() {
-        if(empty($_SESSION)) {
-            return "login"._EXTENSION_PHP;
-        } else {
-            $arrSession = ["id" => $_SESSION['u_id']];
-            $result = $this->model->getUser($arrSession, false, true);
-            $this->addDynamicProperty("arrUserInfo", $result[0]);
-            return "setting"._EXTENSION_PHP;
-        }
+        $arrSession = ["id" => $_SESSION['u_id']];
+        $result = $this->model->getUser($arrSession, false, true);
+        $this->addDynamicProperty("arrUserInfo", $result[0]);
+        return "setting"._EXTENSION_PHP;
     }
 
     public function settingPost() {
@@ -123,19 +115,25 @@ class UserController extends Controller {
         $arrChkErr = [];
         // 유효성체크
 
-        // PW 글자수 체크
-        if(mb_strlen($arrPost["pw"]) > 20 || mb_strlen($arrPost["pw"]) < 8) {
-            $arrChkErr["pw"] = "* 비밀번호는 8~20글자로 입력해 주세요.";
-        }
-        // PW 영문숫자특문 체크 (추가하기)
-        $chk2 = preg_match('/^[0-9a-zA-Z\!\@\#\$\%\^\&\*]*$/u', $arrPost["pw"]);
-        if($chk2 !== 1) {
-            $arrChkErr["pw"] = "* 비밀번호는 영문, 숫자, 특수문자 조합으로 입력해 주세요.";
-        }
+        if(mb_strlen($arrPost["pw"]) === 0 && mb_strlen($arrPost["pwChk"]) === 0) {
+            $updateUserFlg = false;
+        } else {
+            $updateUserFlg = true;
 
-        // 비밀번호와 비밀번호 확인
-        if($arrPost["pw"] !== $arrPost["pwChk"]) {
-            $arrChkErr["pwChk"] = "* 비밀번호 확인이 일치하지 않습니다.";
+            // PW 글자수 체크
+            if(mb_strlen($arrPost["pw"]) > 20 || mb_strlen($arrPost["pw"]) < 8) {
+                $arrChkErr["pw"] = "* 비밀번호는 8~20글자로 입력해 주세요.";
+            }
+            // PW 영문숫자특문 체크 (추가하기)
+            $chk2 = preg_match('/^[0-9a-zA-Z\!\@\#\$\%\^\&\*]*$/u', $arrPost["pw"]);
+            if($chk2 !== 1) {
+                $arrChkErr["pw"] = "* 비밀번호는 영문, 숫자, 특수문자 조합으로 입력해 주세요.";
+            }
+
+            // 비밀번호와 비밀번호 확인
+            if($arrPost["pw"] !== $arrPost["pwChk"]) {
+                $arrChkErr["pwChk"] = "* 비밀번호 확인이 일치하지 않습니다.";
+            }
         }
 
         // name 글자수 체크
@@ -154,7 +152,7 @@ class UserController extends Controller {
         $this->model->beginTransaction();
 
         // user insert
-        if(!$this->model->updateUser($arrPost)) {
+        if(!$this->model->updateUser($arrPost, $updateUserFlg)) {
             // 예외처리 롤백
             $this->model->rollback();
             echo "User Regist Error";
@@ -163,8 +161,12 @@ class UserController extends Controller {
         $this->model->commit(); // 정상처리 커밋
         // *** Transaction End
 
+        echo "<script>alert('정보 수정이 완료되었습니다');</script>";
+        $this->addDynamicProperty('successFlg', true);
+
         // 메인 페이지로 이동
-        return _BASE_REDIRECT."/user/main";
+        return "setting"._EXTENSION_PHP;
+        // return _BASE_REDIRECT."/user/main";
 
     }
 

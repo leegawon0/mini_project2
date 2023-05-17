@@ -37,3 +37,15 @@ function chkDupId() {
     // 에러는 alert로 처리
     .catch(error => alert(error.message));
 }
+
+function signoutConfirm() {
+    if(confirm('정말 탈퇴하시겠습니까?')) {
+        redirectSignout();
+    } else {
+        redirectSetting();
+    }
+}
+
+function editFormSubmit() {
+    document.getElementById('editForm').submit();
+}

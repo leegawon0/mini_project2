@@ -171,13 +171,18 @@ class UserController extends Controller {
     }
 
     public function signoutGet() {
-        $result = $this->model->deleteUser($_SESSION);
-        if($result !== 1) {
-            $errMsg = "회원 탈퇴에 실패했습니다.";
-            $this->addDynamicProperty("errMsg", $errMsg);
-            // 설정 페이지 리턴
-            return "setting"._EXTENSION_PHP;
+        // *** Transaction Start
+        $this->model->beginTransaction();
+
+        // user insert
+        if(!$this->model->deleteUser($_SESSION)) {
+            // 예외처리 롤백
+            $this->model->rollback();
+            echo "User Signout Error";
+            exit();
         }
+        $this->model->commit(); // 정상처리 커밋
+        // *** Transaction End
         return _BASE_REDIRECT."/user/login";
     }
 }

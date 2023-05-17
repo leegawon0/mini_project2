@@ -81,17 +81,12 @@ class UserModel extends Model {
         ];
 
         try {
-            $this->conn->beginTransaction();
             $stmt = $this->conn->prepare($sql);
-            $stmt->execute($prepare);
-            $result_cnt = $stmt->rowCount();
-            $this->conn->commit();
+            $result = $stmt->execute( $prepare );
+            return $result;
         } catch (Exception $e) {
-            $this->conn->rollback();
-            echo "UserModel->deleteUser Error : ".$e->getMessage();
-            exit();
+            return false;
         }
-        return $result_cnt;
     }
 
     public function updateUser($arrUserInfo, $pwFlg = true) {

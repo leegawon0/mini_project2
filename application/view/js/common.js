@@ -17,6 +17,8 @@ function redirectSignout() {
 function chkDupId() {
     const id = document.getElementById('id');
     const url = "/api/user?id=" + id.value;
+    const submitBtn = document.getElementById('submitBtn');
+    const signinForm = document.getElementById('signinForm');
     let apiData = null;
 
     // API
@@ -31,7 +33,15 @@ function chkDupId() {
         if(apiData["flg"] === "1") {
             idspan.innerHTML = apiData["msg"];
         } else {
-            idspan.innerHTML = "* 입력하신 ID가 존재하지 않습니다.";
+            const regEx = new RegExp('^[a-z0-9]{3,12}$');
+            if(regEx.test(id.value)) {
+                idspan.innerHTML = "* 사용 가능한 ID입니다.";
+                id.setAttribute('readonly', true)
+                submitBtn.removeAttribute('onclick');
+                signinForm.removeAttribute('onsubmit');
+            } else {
+                idspan.innerHTML = "* ID는 3~12글자의 영문 소문자, 숫자 조합이어야 합니다.";
+            }
         }
     })
     // 에러는 alert로 처리
@@ -40,6 +50,7 @@ function chkDupId() {
 
 function signoutConfirm() {
     if(confirm('정말 탈퇴하시겠습니까?')) {
+        alert('회원 탈퇴가 완료되었습니다.');
         redirectSignout();
     } else {
         return false;
@@ -49,37 +60,3 @@ function signoutConfirm() {
 function editFormSubmit() {
     document.getElementById('editForm').submit();
 }
-
-// function CustomAlert(){
-//     this.alert = function(message,title){
-//       document.body.innerHTML = document.body.innerHTML + '<div id="dialogoverlay"></div><div id="dialogbox" class="slit-in-vertical"><div><div id="dialogboxhead"></div><div id="dialogboxbody"></div><div id="dialogboxfoot"></div></div></div>';
-
-//       let dialogoverlay = document.getElementById('dialogoverlay');
-//       let dialogbox = document.getElementById('dialogbox');
-
-//       let winH = window.innerHeight;
-//       dialogoverlay.style.height = winH+"px";
-
-//       dialogbox.style.top = "100px";
-
-//       dialogoverlay.style.display = "block";
-//       dialogbox.style.display = "block";
-
-//       document.getElementById('dialogboxhead').style.display = 'block';
-
-//       if(typeof title === 'undefined') {
-//         document.getElementById('dialogboxhead').style.display = 'none';
-//       } else {
-//         document.getElementById('dialogboxhead').innerHTML = '<i class="fa fa-exclamation-circle" aria-hidden="true"></i> '+ title;
-//       }
-//       document.getElementById('dialogboxbody').innerHTML = message;
-//       document.getElementById('dialogboxfoot').innerHTML = '<button class="pure-material-button-contained active" onclick="customAlert.ok()">OK</button>';
-//     }
-    
-//     this.ok = function(){
-//       document.getElementById('dialogbox').style.display = "none";
-//       document.getElementById('dialogoverlay').style.display = "none";
-//     }
-//   }
-
-//   let customAlert = new CustomAlert();

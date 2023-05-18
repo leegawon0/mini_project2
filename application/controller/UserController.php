@@ -43,15 +43,15 @@ class UserController extends Controller {
         // 유효성체크
 
         // ID 영문숫자 체크
-        $chk1 = preg_match('/^[0-9a-z]*$/u', $arrPost["id"]);
-        if($chk1 !== 1) {
-            $arrChkErr["id"] = "* ID는 영문 소문자, 숫자 조합으로 입력해 주세요.";
-        }
+        // $chk1 = preg_match('/^[0-9a-z]*$/u', $arrPost["id"]);
+        // if($chk1 !== 1) {
+        //     $arrChkErr["id"] = "* ID는 영문 소문자, 숫자 조합으로 입력해 주세요.";
+        // }
 
-        // ID 글자수 체크
-        if(mb_strlen($arrPost["id"]) < 3 || mb_strlen($arrPost["id"]) > 12) {
-            $arrChkErr["id"] = "* ID는 3~12글자로 입력해 주세요.";
-        }
+        // // ID 글자수 체크
+        // if(mb_strlen($arrPost["id"]) < 3 || mb_strlen($arrPost["id"]) > 12) {
+        //     $arrChkErr["id"] = "* ID는 3~12글자로 입력해 주세요.";
+        // }
 
         // PW 글자수 체크
         if(mb_strlen($arrPost["pw"]) > 20 || mb_strlen($arrPost["pw"]) < 8) {
@@ -93,8 +93,15 @@ class UserController extends Controller {
         $this->model->commit(); // 정상처리 커밋
         // *** Transaction End
 
+        echo "<script>alert('회원가입이 완료되었습니다.');</script>";
+        echo "<script>alert('다시 한번 로그인 해 주세요.');</script>";
+        $this->addDynamicProperty('signinFlg', true);
+
+        // 메인 페이지로 이동
+        return "signin"._EXTENSION_PHP;
+
         // 로그인페이지로 이동
-        return _BASE_REDIRECT."/user/login";
+        // return _BASE_REDIRECT."/user/login";
 
     }
 
@@ -183,6 +190,8 @@ class UserController extends Controller {
         }
         $this->model->commit(); // 정상처리 커밋
         // *** Transaction End
+        session_unset();
+        session_destroy();
         return _BASE_REDIRECT."/user/login";
     }
 

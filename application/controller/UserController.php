@@ -12,7 +12,7 @@ class UserController extends Controller {
         $this->model->close(); // DB 파기
         // 유저 유무 체크
         if(count($result) === 0) {
-            $errMsg = "입력하신 회원 정보가 없습니다.";
+            $errMsg = "* 입력하신 회원 정보가 없습니다.";
             $this->addDynamicProperty("errMsg", $errMsg);
             // 로그인 페이지 리턴
             return "login"._EXTENSION_PHP;
@@ -49,8 +49,8 @@ class UserController extends Controller {
         }
 
         // ID 글자수 체크
-        if(mb_strlen($arrPost["id"]) === 0 || mb_strlen($arrPost["id"]) > 12) {
-            $arrChkErr["id"] = "* ID는 12글자 이하로 입력해 주세요.";
+        if(mb_strlen($arrPost["id"]) < 3 || mb_strlen($arrPost["id"]) > 12) {
+            $arrChkErr["id"] = "* ID는 3~12글자로 입력해 주세요.";
         }
 
         // PW 글자수 체크
@@ -125,7 +125,7 @@ class UserController extends Controller {
                 $arrChkErr["pw"] = "* 비밀번호는 8~20글자로 입력해 주세요.";
             }
             // PW 영문숫자특문 체크 (추가하기)
-            $chk2 = preg_match('/^[0-9a-zA-Z\!\@\#\$\%\^\&\*]*$/u', $arrPost["pw"]);
+            $chk2 = preg_match('/^[0-9a-zA-Z\!\@\#\$\%\^\&\*\~]*$/u', $arrPost["pw"]);
             if($chk2 !== 1) {
                 $arrChkErr["pw"] = "* 비밀번호는 영문, 숫자, 특수문자 조합으로 입력해 주세요.";
             }
@@ -197,7 +197,7 @@ class UserController extends Controller {
 
         // 유저 유무 체크
         if($_POST["chkPw"] !== $result[0]["u_pw"]) {
-            $errMsg = "비밀번호를 잘못 입력하셨습니다.";
+            $errMsg = "* 비밀번호를 잘못 입력하셨습니다.";
             $this->addDynamicProperty("errMsg", $errMsg);
             // 로그인 페이지 리턴
             return "pwchk"._EXTENSION_PHP;

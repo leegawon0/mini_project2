@@ -42,7 +42,7 @@ function signoutConfirm() {
     if(confirm('정말 탈퇴하시겠습니까?')) {
         redirectSignout();
     } else {
-        redirectSetting();
+        return false;
     }
 }
 

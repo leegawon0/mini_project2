@@ -185,6 +185,28 @@ class UserController extends Controller {
         // *** Transaction End
         return _BASE_REDIRECT."/user/login";
     }
+
+    public function pwchkGet() {
+        return "pwchk"._EXTENSION_PHP;
+    }
+
+    public function pwchkPost() {
+        $arrPrepare["id"] = $_SESSION[_STR_LOGIN_ID]; 
+        $result = $this->model->getUser($arrPrepare, false, false);
+        $this->model->close(); // DB 파기
+
+        // 유저 유무 체크
+        if($_POST["chkPw"] !== $result[0]["u_pw"]) {
+            $errMsg = "비밀번호를 잘못 입력하셨습니다.";
+            $this->addDynamicProperty("errMsg", $errMsg);
+            // 로그인 페이지 리턴
+            return "pwchk"._EXTENSION_PHP;
+        }
+        // session에 chk_flg 저장
+        $_SESSION["chk_flg"] = "1";
+        // 설정 페이지 리턴
+        return _BASE_REDIRECT."/user/setting";
+    }
 }
 
 ?>

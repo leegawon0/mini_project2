@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/application/view/css/common.css">
 </head>
 <body>
+    <?php echo !isset($_SESSION['chk_flg']) ? "<script>window.location.href = '/user/pwchk';</script>" : "" ?>
     <?php echo isset($this->successFlg) ? "<script>window.location.href = '/user/main';</script>" : "" ?>
     <h1>회원정보 수정</h1>
     <form id="editForm" action="/user/setting" method="post" onsubmit="return false">

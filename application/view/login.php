@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>MOMENT :: Login</title>
 	<link rel="shortcut icon" href="/application/view/img/favicon.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link rel="stylesheet" href="/application/view/css/common.css">
@@ -23,7 +23,7 @@
             <div class="btnSection">
                 <button class="btn mainBtn" type="submit">로그인</button>
             </div>
-            <div class="btnSection3">
+            <div class="btnSection2">
                 <span class="signinMsg">아직 계정이 없으신가요?</span>
                 <button class="signinBtn" id="signin" onclick="redirectSignin();">회원가입</button>
             </div>

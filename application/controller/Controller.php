@@ -2,9 +2,9 @@
 
 namespace application\controller;
 use application\util\UrlUtil;
-use \AllowDynamicProperties; // 기존에 추가해두지 않았지만 나중에 사용하게 되는 속성인 동적속성들을 사용할 수 있게 해줌
+use \AllowDynamicProperties;
 
-#[AllowDynamicProperties] // 기존에 추가해두지 않았지만 나중에 사용하게 되는 속성인 동적속성들을 사용할 수 있게 해줌
+#[AllowDynamicProperties]
 class Controller {
     protected $model;
     private static $modelList = [];

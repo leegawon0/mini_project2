@@ -14,6 +14,7 @@ function redirectSignout() {
     location.href = "/user/signout";
 }
 
+// 아이디 중복체크 + 유효성 검사
 function chkDupId() {
     const id = document.getElementById('id');
     const url = "/api/user?id=" + id.value;
@@ -55,8 +56,4 @@ function signoutConfirm() {
     } else {
         return false;
     }
-}
-
-function editFormSubmit() {
-    document.getElementById('editForm').submit();
 }

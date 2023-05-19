@@ -5,13 +5,14 @@
 	<meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Main</title>
+	<title>MOMENT :: Main</title>
 	<meta name="description" content="" />
 	<meta name="keywords" content="" />
 	<meta name="author" content="Codrops" />
 	<link rel="shortcut icon" href="/application/view/img/favicon.png">
 	<link rel="stylesheet" href="https://use.typekit.net/jyi8res.css">
 	<link rel="stylesheet" type="text/css" href="/application/view/css/base.css" />
+    <link rel="stylesheet" href="/application/view/css/common.css">
 	<script>document.documentElement.className="js";var supportsCssVars=function(){var e,t=document.createElement("style");return t.innerHTML="root: { --tmp-var: bold; }",document.head.appendChild(t),e=!!(window.CSS&&window.CSS.supports&&window.CSS.supports("font-weight","var(--tmp-var)")),t.parentNode.removeChild(t),e};supportsCssVars()||alert("Please view this demo in a modern browser that supports CSS Variables.");</script>
 </head>
 

@@ -19,7 +19,7 @@ class UserController extends Controller {
         }
         // session에 User ID 저장
         $_SESSION[_STR_LOGIN_ID] = $_POST["id"];
-        // 리스트 페이지 리턴
+        // 메인 페이지 리턴
         return _BASE_REDIRECT."/user/main";
     }
 
@@ -40,23 +40,13 @@ class UserController extends Controller {
 
         $arrPost = $_POST;
         $arrChkErr = [];
+
         // 유효성체크
-
-        // ID 영문숫자 체크
-        // $chk1 = preg_match('/^[0-9a-z]*$/u', $arrPost["id"]);
-        // if($chk1 !== 1) {
-        //     $arrChkErr["id"] = "* ID는 영문 소문자, 숫자 조합으로 입력해 주세요.";
-        // }
-
-        // // ID 글자수 체크
-        // if(mb_strlen($arrPost["id"]) < 3 || mb_strlen($arrPost["id"]) > 12) {
-        //     $arrChkErr["id"] = "* ID는 3~12글자로 입력해 주세요.";
-        // }
-
         // PW 글자수 체크
         if(mb_strlen($arrPost["pw"]) > 20 || mb_strlen($arrPost["pw"]) < 8) {
             $arrChkErr["pw"] = "* 비밀번호는 8~20글자로 입력해 주세요.";
         }
+
         // PW 영문숫자특문 체크 (추가하기)
         $chk2 = preg_match('/^[0-9a-zA-Z\!\@\#\$\%\^\&\*]*$/u', $arrPost["pw"]);
         if($chk2 !== 1) {
@@ -97,12 +87,26 @@ class UserController extends Controller {
         echo "<script>alert('다시 한번 로그인 해 주세요.');</script>";
         $this->addDynamicProperty('signinFlg', true);
 
-        // 메인 페이지로 이동
+        // 회원가입 페이지 재호출
         return "signin"._EXTENSION_PHP;
+    }
 
-        // 로그인페이지로 이동
-        // return _BASE_REDIRECT."/user/login";
+    public function signoutGet() {
+        // *** Transaction Start
+        $this->model->beginTransaction();
 
+        // user insert
+        if(!$this->model->deleteUser($_SESSION)) {
+            // 예외처리 롤백
+            $this->model->rollback();
+            echo "User Signout Error";
+            exit();
+        }
+        $this->model->commit(); // 정상처리 커밋
+        // *** Transaction End
+        session_unset();
+        session_destroy();
+        return _BASE_REDIRECT."/user/login";
     }
 
     public function mainGet() {
@@ -120,8 +124,8 @@ class UserController extends Controller {
 
         $arrPost = $_POST;
         $arrChkErr = [];
-        // 유효성체크
 
+        // 유효성체크
         if(mb_strlen($arrPost["pw"]) === 0 && mb_strlen($arrPost["pwChk"]) === 0) {
             $updateUserFlg = false;
         } else {
@@ -171,28 +175,8 @@ class UserController extends Controller {
         echo "<script>alert('정보 수정이 완료되었습니다');</script>";
         $this->addDynamicProperty('successFlg', true);
 
-        // 메인 페이지로 이동
+        // 설정 페이지 재호출
         return "setting"._EXTENSION_PHP;
-        // return _BASE_REDIRECT."/user/main";
-
-    }
-
-    public function signoutGet() {
-        // *** Transaction Start
-        $this->model->beginTransaction();
-
-        // user insert
-        if(!$this->model->deleteUser($_SESSION)) {
-            // 예외처리 롤백
-            $this->model->rollback();
-            echo "User Signout Error";
-            exit();
-        }
-        $this->model->commit(); // 정상처리 커밋
-        // *** Transaction End
-        session_unset();
-        session_destroy();
-        return _BASE_REDIRECT."/user/login";
     }
 
     public function pwchkGet() {

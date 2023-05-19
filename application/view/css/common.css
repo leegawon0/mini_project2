@@ -182,22 +182,9 @@ hr {
 }
 
 .btnSection2 {
-    margin: 0;
-    width: 100%;
-    display: grid;
-    justify-content: end;
-}
-
-.btnSection3 {
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
-}
-
-.btnSection4 {
-    display: grid;
-    width: 100%;
-    justify-content: center;
 }
 
 .signoutBtn {
@@ -220,4 +207,9 @@ hr {
     margin: 7px;
     margin-right: 13px;
     font-size: 0.9rem;
+    color: rgb(121, 121, 121);
+}
+
+.slide-nav__img {
+    cursor: default;
 }
